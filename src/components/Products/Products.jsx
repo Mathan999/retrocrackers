@@ -60,9 +60,9 @@ function Products() {
           id: key,
           ...value,
           categorys: value.climate || 'Unspecified',
-          imageUrl: value.imageUrl || logo // Fallback to logo if imageUrl is missing
+          imageUrl: value.imageUrl || logo
         }));
-        console.log('Fetched Products:', loadedProducts); // Debug
+        console.log('Fetched Products:', loadedProducts);
         setProducts(loadedProducts);
       } else {
         console.log('No products found in Firebase');
@@ -146,7 +146,6 @@ function Products() {
     const doc = new jsPDF();
     doc.setFont("helvetica", "normal");
 
-    // Verify QR code image
     const img = new Image();
     img.src = qrCodeImage;
     img.onerror = () => console.error('Failed to load QR code image:', qrCodeImage);
@@ -160,7 +159,6 @@ function Products() {
     doc.text("Vembakottai, Sivakasi - 626123", 105, 35, { align: "center" });
     doc.text("Phone no.: +919597413148 & +919952555514", 105, 40, { align: "center" });
 
-    // Only add QR code if it loads successfully
     if (img.complete && img.naturalWidth !== 0) {
       doc.addImage(qrCodeImage, 'WEBP', 150, 50, 40, 40);
     } else {
@@ -310,7 +308,7 @@ function Products() {
 
   const sendWhatsAppMessage = (orderData, pdfBase64) => {
     const phoneNumber = "918778915065";
-    let message = `New Order Received!\n\nInvoice No.: ${orderData.invoiceNumber}\nCustomer: ${orderData.userName}\nPhone: ${orderData.userPhone}\nAddress: ${orderData.userAddress}\nStatus: ${orderData.status}\nTotal Amount: ₹${orderData.totalAmount.toFixed(2)}\n\nItems:\n${orderData.cart.map(item => `${item.productName} - Qty: ${item.quantity} - ₹${(item.ourPrice * item.quantity).toFixed(2)}`).join('\n')}\n\nNote: The detailed order summary PDF is attached.`;
+    let message = `New Order Received!\n\nInvoice No.: ${orderData.invoiceNumber}\nCustomer: ${orderData.userName}\nPhone: ${orderData.userPhone}\nAddress: ${orderData.userAddress}\nStatus: ${orderData.status}\nTotal Amount: ₹${orderData.totalAmount.toFixed(2)}\n\nItems:\n${orderData.cart.map(item => `${item.productName} - Qty: ${item.quantity} - ₹${(item.ourPrice * item.quantity).toFixed(2)}`).join('\n')}\n\nNote: The order summary PDF has been downloaded to your device. Please share it manually via WhatsApp.`;
     
     if (message.length > 4000) {
       message = message.substring(0, 3990) + "...";
@@ -319,14 +317,7 @@ function Products() {
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     
     try {
-      const link = document.createElement('a');
-      link.href = whatsappUrl;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Automatically trigger PDF download
+      // Trigger PDF download
       const pdfBlob = new Blob([atob(pdfBase64)], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const fileName = `order_summary_${orderData.invoiceNumber}.pdf`;
@@ -338,10 +329,28 @@ function Products() {
       document.body.removeChild(downloadLink);
       URL.revokeObjectURL(pdfUrl);
 
+      // Open WhatsApp with text message
+      const whatsappLink = document.createElement('a');
+      whatsappLink.href = whatsappUrl;
+      whatsappLink.target = '_blank';
+      document.body.appendChild(whatsappLink);
+      whatsappLink.click();
+      document.body.removeChild(whatsappLink);
+
+      // Alert user to manually share the PDF
+      alert(
+        "Order placed successfully! The order summary PDF has been downloaded to your device. " +
+        "A WhatsApp message has been opened with the order details. Please manually attach the downloaded PDF " +
+        `(named ${fileName}) to the WhatsApp chat with +918778915065 and send it.`
+      );
+
       return true;
     } catch (error) {
-      console.error("Error opening WhatsApp:", error);
-      alert("Failed to send order details via WhatsApp to 918778915065. Please ensure WhatsApp is installed or try again.");
+      console.error("Error in sendWhatsAppMessage:", error);
+      alert(
+        "Failed to process WhatsApp message or PDF download. " +
+        "Please ensure WhatsApp is installed and try again, or manually share the downloaded PDF."
+      );
       return false;
     }
   };
@@ -383,7 +392,6 @@ function Products() {
         setIsOrderPlaced(true);
         setShowSuccessAnimation(true);
         setTimeout(() => setShowSuccessAnimation(false), 3000);
-        alert("Order placed successfully! The order summary PDF has been sent via WhatsApp to 918778915065 and downloaded automatically.");
       }
     } catch (error) {
       console.error("Error processing order:", error);
@@ -606,7 +614,7 @@ function Products() {
                                 alt={product.productName || 'Product'}
                                 onError={(e) => {
                                   console.error(`Failed to load image for ${product.productName}: ${e.target.src}`);
-                                  e.target.src = logo; // Fallback to logo
+                                  e.target.src = logo;
                                 }}
                               />
                             </td>
