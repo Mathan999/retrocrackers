@@ -5,8 +5,10 @@ import { database } from "../firebase";
 import { Plus, Minus, Loader2, CheckCircle } from "lucide-react";
 import { jsPDF } from "jspdf";
 import "./Products.css";
-import qrCodeImage from '../../assets/qr.webp';
-import logo from "../../assets/logo_1x1.png";
+
+// Use absolute paths for assets in the public folder
+const qrCodeImage = '/assets/qr.webp';
+const logo = '/assets/logo_1x1.png';
 
 function Products() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -57,10 +59,13 @@ function Products() {
         const loadedProducts = Object.entries(data).map(([key, value]) => ({
           id: key,
           ...value,
-          categorys: value.climate || 'Unspecified'
+          categorys: value.climate || 'Unspecified',
+          imageUrl: value.imageUrl || logo // Fallback to logo if imageUrl is missing
         }));
+        console.log('Fetched Products:', loadedProducts); // Debug
         setProducts(loadedProducts);
       } else {
+        console.log('No products found in Firebase');
         setProducts([]);
       }
     };
@@ -72,11 +77,13 @@ function Products() {
         setLastInvoiceNumber(counter);
       } catch (error) {
         console.error("Error fetching invoice counter:", error);
+        alert("Failed to fetch invoice counter. Please try again.");
       }
     };
 
     onValue(productsRef, handleProductData, (error) => {
       console.error("Error fetching products:", error);
+      alert("Failed to fetch products. Please check your connection or try again.");
     });
     fetchLastInvoiceNumber();
 
@@ -139,6 +146,11 @@ function Products() {
     const doc = new jsPDF();
     doc.setFont("helvetica", "normal");
 
+    // Verify QR code image
+    const img = new Image();
+    img.src = qrCodeImage;
+    img.onerror = () => console.error('Failed to load QR code image:', qrCodeImage);
+
     doc.setFontSize(18);
     doc.setTextColor(0, 0, 0);
     doc.text("RETRO CRACKERS", 105, 20, { align: "center" });
@@ -148,7 +160,12 @@ function Products() {
     doc.text("Vembakottai, Sivakasi - 626123", 105, 35, { align: "center" });
     doc.text("Phone no.: +919597413148 & +919952555514", 105, 40, { align: "center" });
 
-    doc.addImage(qrCodeImage, 'WEBP', 150, 50, 40, 40);
+    // Only add QR code if it loads successfully
+    if (img.complete && img.naturalWidth !== 0) {
+      doc.addImage(qrCodeImage, 'WEBP', 150, 50, 40, 40);
+    } else {
+      console.warn('QR code image not loaded, skipping in PDF');
+    }
 
     doc.setFontSize(10);
     doc.text("UPI id: muthukumarm380@oksbi", 150, 95);
@@ -370,7 +387,7 @@ function Products() {
       }
     } catch (error) {
       console.error("Error processing order:", error);
-      alert("Failed to process your order. Please try again.");
+      alert(`Failed to process your order: ${error.message}. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -399,7 +416,7 @@ function Products() {
       URL.revokeObjectURL(pdfUrl);
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      alert(`Failed to generate PDF: ${error.message}`);
     }
   };
 
@@ -470,7 +487,7 @@ function Products() {
       }, 1000);
     } catch (error) {
       console.error("Error downloading PDF:", error);
-      alert("Failed to download PDF. Please try again.");
+      alert(`Failed to download PDF: ${error.message}`);
     } finally {
       setIsPdfDownloading(false);
     }
@@ -485,13 +502,13 @@ function Products() {
         <meta name="description" content="Browse our wide selection of high-quality crackers for all occasions. Filter by climate, search for specific products, and easily manage your cart." />
         <meta property="og:title" content="RETRO CRACKERS - Product Catalog" />
         <meta property="og:description" content="Explore our diverse range of crackers. From morning to night, fancy to gift boxes, we have it all. Shop now for the best deals!" />
-        <meta property="og:image" content="/fav-icon.png" />
+        <meta property="og:image" content={logo} />
         <meta property="og:url" content="https://www.retrocrackers.com/products" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="RETRO CRACKERS - Product Catalog" />
         <meta name="twitter:description" content="Discover our extensive range of crackers for all your celebration needs. Easy filtering and search options available." />
-        <meta name="twitter:image" content="/fav-icon.png" />
+        <meta name="twitter:image" content={logo} />
         <meta name="keywords" content="crackers, fireworks, Diwali, celebration, morning crackers, night crackers, fancy crackers, gift boxes" />
         <meta name="author" content="RETRO CRACKERS" />
         <meta name="robots" content="index, follow" />
@@ -511,7 +528,7 @@ function Products() {
                     "@type": "Product",
                     "position": ${index + 1},
                     "name": "${product.productName || 'N/A'}",
-                    "description": "${product.productName || 'N/A'} - ${product.climate || 'Unspecified'} climate cracker",
+                    "description": "${product.productName || 'N/A'} - ${product.categorys || 'Unspecified'} climate cracker",
                     "image": "${product.imageUrl || logo}",
                     "offers": {
                       "@type": "Offer",
@@ -585,9 +602,12 @@ function Products() {
                             <td data-label="Preview">
                               <img
                                 className='product-image'
-                                src={product.imageUrl || logo}
+                                src={product.imageUrl && product.imageUrl !== '' ? product.imageUrl : logo}
                                 alt={product.productName || 'Product'}
-                                onError={(e) => { e.target.src = logo; }}
+                                onError={(e) => {
+                                  console.error(`Failed to load image for ${product.productName}: ${e.target.src}`);
+                                  e.target.src = logo; // Fallback to logo
+                                }}
                               />
                             </td>
                             <td data-label="No.">{currentIndex}</td>
