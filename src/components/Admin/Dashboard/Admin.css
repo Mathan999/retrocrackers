@@ -1,0 +1,121 @@
+.admin-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f3f4f6;
+  
+  }
+  
+  .sidebar {
+    background-color: #1f2937;
+    color: rgb(255, 255, 255);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .sidebar.expanded {
+    width: 16rem;
+  }
+  
+  .sidebar.collapsed {
+    width: 4rem;
+  }
+  
+  .sidebar.mobile-expanded {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    z-index: 10;
+  }
+  
+  .sidebar-header {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .sidebar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  .close-button {
+    color: rgb(0, 0, 0);
+    font-size: 1.5rem;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    transition: background-color 0.2s;
+    color: black; /* Add this line to set the text color to black */
+  }
+  
+  .nav-item:hover {
+    background-color: #374151;
+  }
+  
+  .nav-item.active {
+    background-color: #374151;
+  }
+  
+  .nav-icon {
+    margin-right: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-header {
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu-button {
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: #4b5563;
+  }
+  
+  .menu-button:hover {
+    color: #1f2937;
+  }
+  
+  .header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .content-area {
+    padding: 1.5rem;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  @media (max-width: 767px) {
+    .sidebar {
+      display: none;
+    }
+  
+    .sidebar.mobile-expanded {
+      display: block;
+    }
+  }
+
+  .nav-item{
+    color: #fff!important;
+  }

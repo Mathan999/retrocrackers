@@ -1,0 +1,85 @@
+.products {
+  padding: 2rem;
+}
+
+.filters {
+  margin-bottom: 1rem;
+}
+
+.filters button {
+  margin-right: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #d900ff;
+  padding: 8px;
+  text-align: left;
+  color: black;
+}
+input{
+  color: black;
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.cart-summary {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.quantity-input {
+  width: 60px;
+  color: rgb(68, 0, 255);
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.image-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 0.8rem;
+  }
+  
+  .filters button {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}

@@ -1,0 +1,17 @@
+/* #root {
+  width: 200%;
+} */
+
+/* Styles for the largest screens */
+/* @media only screen and (min-width: 1200px) {
+#root {
+  width: 100%;
+}
+} */
+
+/* Styles for medium devices */
+/* @media only screen and (min-width: 768px) and (max-width: 1199px) {
+#root {
+  width: 150%;
+}
+} */
