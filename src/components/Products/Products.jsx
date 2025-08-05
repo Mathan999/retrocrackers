@@ -7,8 +7,8 @@ import { jsPDF } from "jspdf";
 import "./Products.css";
 
 // Use absolute paths for assets in the public folder
-const qrCodeImage = '/assets/qr.webp';
-const logo = '/assets/logo_1x1.png';
+const qrCodeImage = '../assets/qr_code.webp'; // Adjust the path as necessary
+const logo = '../assets/logo_1x1.png';
 
 function Products() {
   const [searchTerm, setSearchTerm] = useState('');
