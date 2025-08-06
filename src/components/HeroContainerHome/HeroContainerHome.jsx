@@ -101,7 +101,7 @@ const HeroContainerHome = () => {
         </div>
         
         <div className="text-center mb-8">
-          <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2">PRICE LIST - 2024</h3>
+          <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2">PRICE LIST - 2025</h3>
           <p className="text-base md:text-lg lg:text-xl">
             ALL TYPES OF FANCY CRACKERS & GIFT BOXES AVAILABLE
           </p>

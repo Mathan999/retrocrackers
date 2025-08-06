@@ -28,7 +28,8 @@ const Admin = () => {
     { key: '1', icon: '📤', label: 'UploadProduct', path: 'upload', style: { color: 'white' } },
     { key: '2', icon: '📦', label: 'Onlineordered', path: 'onlineordered', style: { color: 'white' } },
     { key: '3', icon: '🛍️', label: 'Products', path: 'products', style: { color: 'white' } },
-    { key: '4', icon: '🚪', label: 'Logout', path: 'logout', style: { color: 'white' } },
+    { key: '4', icon: '📋', label: 'CustomerOrder', path: 'customer-order', style: { color: 'white' } },
+    { key: '5', icon: '🚪', label: 'Logout', path: 'logout', style: { color: 'white' } },
   ];
 
   const handleMenuClick = (path) => {

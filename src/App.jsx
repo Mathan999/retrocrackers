@@ -13,6 +13,7 @@ import './App.css';
 import Notify from './components/Notify/Notify';
 import HeroContainerHome from './components/HeroContainerHome/HeroContainerHome';
 import { Helmet } from 'react-helmet';
+import CustomerOrder from './components/CustomerOrder';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -79,6 +80,11 @@ function App() {
             <Route path="/admin/Products" element={
               <PrivateRoute>
                 <Products1 />
+              </PrivateRoute>
+            } />
+             <Route path="/admin/customer-order" element={
+              <PrivateRoute>
+                <CustomerOrder/>
               </PrivateRoute>
             } />
             <Route path="/admin/Onlineordered" element={<Onlineordered />} />
